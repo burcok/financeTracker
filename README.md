@@ -9,9 +9,11 @@ npm install
 
 Manual:
 
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-npm install vuex@next --save
-npm install apexcharts --save
-npm i @vue-hero-icons/outline @vue-hero-icons/solid
-npm install @formkit/auto-animate
+npm install -D tailwindcss postcss autoprefixer <br/>
+npx tailwindcss init -p <br/>
+npm install vuex@next --save <br/>
+npm install apexcharts --save <br/>
+npm i @vue-hero-icons/outline @vue-hero-icons/solid <br/>
+npm install @formkit/auto-animate <br/>
+
+npm run dev
