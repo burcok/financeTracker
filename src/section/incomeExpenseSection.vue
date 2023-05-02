@@ -22,13 +22,13 @@ const valueInput = ref();
 const store = useStore();
 const con = computed(() => store.getters.getBaseCurrency);
 // store.commit("getSelectedCurrencies", "BOB");
-// console.log(con.value);
 
 const selected = ref(store.state.currencies[0]);
 const getSelectedValue = ref("");
 
 const addTrackFunction = (type) => {
   let payload = {
+    id: store.state.actions.length + 1,
     currency: getSelectedValue.value,
     type: type,
     explanation: descriptionInput.value,
@@ -36,6 +36,9 @@ const addTrackFunction = (type) => {
     date: new Date(),
   };
   store.commit("addNewAction", payload);
+  store.commit("setOriginalActionsToOrgnActions", store.state.actions);
+  store.commit("addNewBalanceToBaseCurrency", payload);
+
   valueInput.value = "";
   descriptionInput.value = "";
   open.value = false;

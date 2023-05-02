@@ -187,7 +187,6 @@ const incomeExpense = [{ name: "None" }, { name: "Income" }, { name: "Expense" }
 const selectedIncomeExpense = ref(incomeExpense[0]);
 const selected = ref(store.state.currencies[0]);
 
-const originalData = [...store.state.actions];
 
 const lastFilter = ref("");
 
@@ -212,6 +211,8 @@ const incomeExpenseFunction = (value) => {
 };
 
 const clearFilter = () => {
+  const originalData = [...store.state.orgnActions];
+
   store.commit("setOriginalActions", originalData);
   selectedIncomeExpense.value = incomeExpense[0];
   selected.value = store.state.currencies[0];

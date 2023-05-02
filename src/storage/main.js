@@ -2,11 +2,12 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: {
-    baseCurrency : ["AED",2],
+    baseCurrency : ["AED",0],
     actions:[
-      {currency:'AFN',type:'Income',explanation:'test',amount:1245,date:'Sat Apr 29 2023 12:13:42 GMT+0300 (GMT+03:00)'},
-      {currency:'WSG',type:'Expense',explanation:'tasfasfasfasfas',amount:1245,date:'Sat Apr 29 2023 12:13:42 GMT+0300 (GMT+03:00)'},
-      {currency:'AFN',type:'Expense',explanation:'tasfasfasfasfas',amount:1245,date:'Sat Apr 29 2023 12:13:42 GMT+0300 (GMT+03:00)'},
+      
+    ],
+    orgnActions:[
+      
     ],
     currencies : [
         {id:"AED",value:1.0},
@@ -42,7 +43,8 @@ const store = createStore({
     },
     getActions(state){
       return state.actions
-    }
+    },
+    
   },
   
   mutations:{
@@ -50,8 +52,8 @@ const store = createStore({
         for (let i in state.currencies) {
             if(state.currencies[i].id == currencyFilteredName){
                 for (let j in state.currencies) { 
-                  if(state.currencies[j].id == state.baseCurrency[0]){ //Bir önceki para biriminin katsayısını alıyoruz
-                    state.baseCurrency[1] =  state.baseCurrency[1] /= state.currencies[j].value //Bir önceki para biriminin katsayısını baseCurrency[1]'den çıkarıyoruz        
+                  if(state.currencies[j].id == state.baseCurrency[0]){ //Ana para biriminin katsayısını alıyoruz
+                    state.baseCurrency[1] =  state.baseCurrency[1] /= state.currencies[j].value //Ana para biriminin katsayısını baseCurrency[1]'den çıkarıyoruz        
                   }
                 }
                 state.baseCurrency[0] = state.currencies[i].id //Yeni para birimini tanımlıyoruz
@@ -59,6 +61,27 @@ const store = createStore({
             }
         } 
         
+    },
+    addNewBalanceToBaseCurrency(state,payload){
+      let currency;
+      for (let i in state.currencies) {
+        if(state.currencies[i].id == payload.currency){
+            currency = state.currencies[i].value
+        }
+      }
+      currency *= payload.amount;
+
+      for (let j in state.currencies) { 
+        if(state.currencies[j].id == state.baseCurrency[0]){ //Ana para biriminin katsayısını alıyoruz
+          currency /= state.currencies[j].value 
+        }
+      }
+
+      if(payload.type == "Income"){
+        state.baseCurrency[1] += currency
+      } else if(payload.type == "Expense"){
+        state.baseCurrency[1] -= currency
+      }
     },
     addNewAction(state,action){
       state.actions.push(action)
@@ -72,6 +95,20 @@ const store = createStore({
     setOriginalActions(state,payload){
       state.actions = [...payload]
       
+    },
+    setOriginalActionsToOrgnActions(state,payload){
+      state.orgnActions = [...payload]
+    },
+    deleteActionByID(state,payload){
+      state.actions = state.actions.filter(action => action.id !== payload);
+    },
+    editActionByID(state,payload){
+      state.actions = state.actions.map(action => {
+        if (action.id === payload.id) { // BIF id'li öğeyi bul
+          return {...payload} // "value" özelliğini güncelle ve yeniden oluştur
+        }
+        return action; // güncelleme yapmayan diğer öğeleri aynen bırak
+      });
     }
   }
 })
